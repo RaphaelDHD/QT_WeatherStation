@@ -73,6 +73,10 @@ public:
      */
     void printAllData() const;
 
+    QVector<int> getAqi();
+
+    QVector<qint64> getDt();
+
     /**
      * @brief return values of all data in db
      */

@@ -54,7 +54,7 @@ TP5_WeatherStation::~TP5_WeatherStation()
 void TP5_WeatherStation::weatherRequest() {
 
     // your netmanager and request here
-    QString URL = "https://api.openweathermap.org/data/2.5/weather?q=bourg-en-bresse&units=metric&appid=d0562f476913da692a065c608d0539f6";
+    QString URL = "https://api.openweathermap.org/data/2.5/weather?q=bourg-en-bresse&lang=fr&units=metric&appid=d0562f476913da692a065c608d0539f6";
     QUrl url(URL);
     QNetworkRequest request;
     request.setUrl(url);
@@ -138,8 +138,7 @@ void TP5_WeatherStation::polutionReplyFinished(QNetworkReply* reply)
     else if (reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt() == 200)
     {
         cout << "connection API polution faite" << endl;
-        QVector<qint64> time;
-        QVector<int> aqi;
+
 
         QByteArray datas = reply->readAll();
         QString infos(datas);
@@ -148,19 +147,24 @@ void TP5_WeatherStation::polutionReplyFinished(QNetworkReply* reply)
 
         QJsonArray listArray = jsonObj["list"].toArray();
         QJsonObject obj;
+
+        dbmanager->removeAllData();
+
         for (int i = 0; i < listArray.size(); i++) {
             obj = listArray[i].toObject();
 
             qint64 dt = obj["dt"].toInt();
             QDateTime localTime = QDateTime::fromSecsSinceEpoch(dt); // s to local
             qint64 msdt = localTime.toMSecsSinceEpoch();
-            time.append(msdt);
 
             QJsonObject main = obj["main"].toObject();
             int aq = main["aqi"].toInt();
-            aqi.append(aq);
+        
+            dbmanager->addData(msdt,aq);
         }
-        pollutionView->update(time, aqi);
+        pollutionView->update(dbmanager->getDt(), dbmanager->getAqi());
+
+
 
     }
     else {

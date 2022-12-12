@@ -34,7 +34,7 @@ bool DbManager::isOpen() const
 
 bool DbManager::createTable()
 {
-    bool success = false;
+    bool success = true;
 
     QSqlQuery query;
     query.prepare("CREATE TABLE pollution(id INTEGER PRIMARY KEY, dt INTEGER, aqi INTEGER);");
@@ -106,6 +106,33 @@ void DbManager::printAllData() const
         qDebug() << "===" << dt << " " << aqi;
     }
 }
+
+QVector<int> DbManager::getAqi() {
+    qDebug() << "Data in db:";
+    QSqlQuery query("SELECT aqi FROM pollution");
+    int idAqi = query.record().indexOf("aqi");
+    QVector<int> vect;
+    while (query.next())
+    { 
+        int aqi = query.value(idAqi).toInt();
+        vect.append(aqi);
+    }
+    return vect;
+}
+
+QVector<qint64> DbManager::getDt() {
+    qDebug() << "Data in db:";
+    QSqlQuery query("SELECT dt FROM pollution");
+    int idDt = query.record().indexOf("dt");
+    QVector<qint64> vect;
+    while (query.next())
+    {
+        int dt = query.value(idDt).toInt();
+        vect.append(dt);
+    }
+    return vect;
+}
+
 
 bool DbManager::entryExists(int dt) const
 {

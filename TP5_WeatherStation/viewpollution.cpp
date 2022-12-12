@@ -26,12 +26,18 @@ ViewPollution::ViewPollution(DbManager* dbm, QWidget* widget) :dbm(dbm), widget(
     chart->addAxis(axisY, Qt::AlignLeft);
     series->attachAxis(axisY);
 
+    chart->setTheme(QChart::ChartTheme(2));
+
+
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
 
     QGridLayout *chartLayout = new QGridLayout;
     chartLayout->addWidget(chartView, 0, 0);
     chartLayout->setContentsMargins(0, 0, 0, 0);
+
+
+
 
     // update chart
     widget->setLayout(chartLayout);
@@ -45,7 +51,7 @@ void ViewPollution::update()
 
 void ViewPollution::update(QVector<qint64> time, QVector<int> aqi)
 {
-
+    series->clear();
     // example on how to convert DateTime to Unix,UTC in milliseconds
     QDateTime currentdt = QDateTime::currentDateTime();
     qint64 msdt = currentdt.toMSecsSinceEpoch();
