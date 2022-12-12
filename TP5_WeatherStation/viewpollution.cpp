@@ -27,7 +27,7 @@ ViewPollution::ViewPollution(DbManager* dbm, QWidget* widget) :dbm(dbm), widget(
     series->attachAxis(axisY);
 
     chart->setTheme(QChart::ChartTheme(2));
-
+    chart->setAnimationOptions(QChart::AnimationOption(1));
 
     QChartView *chartView = new QChartView(chart);
     chartView->setRenderHint(QPainter::Antialiasing);
@@ -47,37 +47,22 @@ ViewPollution::ViewPollution(DbManager* dbm, QWidget* widget) :dbm(dbm), widget(
 
 void ViewPollution::update()
 {
-}
 
-void ViewPollution::update(QVector<qint64> time, QVector<int> aqi)
-{
+
+    QVector<qint64> time = dbm->getDt();
+    QVector<int> aqi = dbm->getAqi();
     series->clear();
-    // example on how to convert DateTime to Unix,UTC in milliseconds
-    QDateTime currentdt = QDateTime::currentDateTime();
-    qint64 msdt = currentdt.toMSecsSinceEpoch();
-    qDebug() << currentdt << " " << QDateTime::fromMSecsSinceEpoch(msdt);
-
-    // generate some mock values
-    // get current time, and add 1 hour (3600000ms) to get next X entry
-    // Warning, OpenWeatherMap provides dt in seconds
-    // => so they will be registered in seconds into the DB...
-    // => you will need to convert to milliseconds (*1000.) before to append
-
-    // append first points
 
     for (int i = 0; i < time.size(); i++) {
         series->append(time[i], aqi[i]);
     }
 
-
-    // Compute min,max and update axis Ranges
-    // Otherwise repaint() will no update the curve ;(
     QDateTime dt0;
     dt0.setMSecsSinceEpoch(time[0]); //xmin for mock values
     QDateTime dt1;
     dt1.setMSecsSinceEpoch(time[time.size() - 1]); //xmax
-    axisX->setRange( dt0,dt1);
-    axisY->setRange(-5,5); //ymin,ymax (do not change for these mock values)
+    axisX->setRange(dt0, dt1);
+    axisY->setRange(-5, 5); //ymin,ymax (do not change for these mock values)
 
     widget->repaint();
 }

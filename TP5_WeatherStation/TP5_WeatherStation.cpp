@@ -162,7 +162,7 @@ void TP5_WeatherStation::polutionReplyFinished(QNetworkReply* reply)
         
             dbmanager->addData(msdt,aq);
         }
-        pollutionView->update(dbmanager->getDt(), dbmanager->getAqi());
+        pollutionView->update();
 
 
 

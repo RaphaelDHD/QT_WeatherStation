@@ -36,7 +36,7 @@ public:
     ViewPollution(DbManager*, QWidget*);
 
     void update() override;
-    void update(QVector<qint64> time, QVector<int> aqi);
+
 
 };
 
