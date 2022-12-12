@@ -29,17 +29,22 @@ public:
     TP5_WeatherStation(DbManager *dbm, QWidget* parent = nullptr);
     ~TP5_WeatherStation();
 
+
+
 private:
     Ui::TP5_WeatherStationClass* ui;
 
     WeatherReport* weatherReport;
     DbManager* dbmanager;
     QNetworkAccessManager* netmanager;
+    QNetworkAccessManager* netmanager2;
 
     ViewReport *reportView;
     ViewPollution *pollutionView;
 
 public slots:
     void weatherRequest();
+    void pollutionRequest();
     void weatherReplyFinished(QNetworkReply* reply);
+    void polutionReplyFinished(QNetworkReply* reply);
 };

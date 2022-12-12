@@ -20,5 +20,11 @@ void ViewReport::init()
 
 void ViewReport::update()
 {
-
+    init();
+    ui->lineEdit_description->setText(model->getDescription());
+    ui->lineEdit_lat->setText(QString::number(model->getLat()));
+    ui->lineEdit_lon->setText(QString::number(model->getLon()));
+    ui->lineEdit_temp->setText(QString::number(model->getTemp()));
+    ui->lineEdit_temp_max->setText(QString::number(model->getTempMax()));
+    ui->lineEdit_temp_min->setText(QString::number(model->getTempMin()));
 }

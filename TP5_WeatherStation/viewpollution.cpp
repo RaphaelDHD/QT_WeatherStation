@@ -35,13 +35,16 @@ ViewPollution::ViewPollution(DbManager* dbm, QWidget* widget) :dbm(dbm), widget(
 
     // update chart
     widget->setLayout(chartLayout);
-
     update();
 }
 
+
 void ViewPollution::update()
 {
-    series->clear();
+}
+
+void ViewPollution::update(QVector<qint64> time, QVector<int> aqi)
+{
 
     // example on how to convert DateTime to Unix,UTC in milliseconds
     QDateTime currentdt = QDateTime::currentDateTime();
@@ -55,23 +58,20 @@ void ViewPollution::update()
     // => you will need to convert to milliseconds (*1000.) before to append
 
     // append first points
-    series->append(msdt, 6);
-    series->append(msdt+3600000., 4);
-    series->append(msdt+3600000.*2, 8);
-    series->append(msdt+3600000.*3, -4);
-    series->append(msdt+3600000.*4, 5);
-    // alternative to append last points, just to show both ways
-    *series << QPointF(msdt+3600000*5, 1) << QPointF(msdt+3600000*6, 3)
-            << QPointF(msdt+3600000*7, 6) << QPointF(msdt+3600000*8, 3) << QPointF(msdt+3600000*9, 2);
+
+    for (int i = 0; i < time.size(); i++) {
+        series->append(time[i], aqi[i]);
+    }
+
 
     // Compute min,max and update axis Ranges
     // Otherwise repaint() will no update the curve ;(
     QDateTime dt0;
-    dt0.setMSecsSinceEpoch(msdt); //xmin for mock values
+    dt0.setMSecsSinceEpoch(time[0]); //xmin for mock values
     QDateTime dt1;
-    dt1.setMSecsSinceEpoch(msdt+3600000*9); //xmax
+    dt1.setMSecsSinceEpoch(time[time.size() - 1]); //xmax
     axisX->setRange( dt0,dt1);
-    axisY->setRange(-5,9); //ymin,ymax (do not change for these mock values)
+    axisY->setRange(-5,5); //ymin,ymax (do not change for these mock values)
 
     widget->repaint();
 }

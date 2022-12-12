@@ -25,6 +25,9 @@ private:
 public:
     WeatherReport();
 
+    void SetWeatherReport(QString main, QString desc, double tmp, double tmp_min, double tmp_max, double lo, double la);
+
+
     // getters
     const QString& getDescription() const {return description;}
     double getTemp() const {return temp;}
